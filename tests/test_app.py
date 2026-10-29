@@ -25,3 +25,7 @@ def test_get_user_found():
 def test_get_user_not_found():
     r = client().get("/users/999")
     assert r.status_code == 404
+
+def test_ping_rejects_injection():
+    r = client().get("/ping?host=localhost;id")
+    assert r.status_code == 400
