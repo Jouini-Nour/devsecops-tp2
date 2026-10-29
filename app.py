@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import subprocess
 
 app = Flask(__name__)
 
@@ -22,6 +23,13 @@ def get_user(user_id):
         return jsonify(error="not found"), 404
     return jsonify(user)
 
+
+@app.route("/ping")
+def ping():
+    host = request.args.get("host", "localhost")
+    out = subprocess.run(f"ping -c 1 {host}", shell=True,
+                         capture_output=True, text=True)
+    return jsonify(output=out.stdout)
 
 @app.route("/echo")
 def echo():
